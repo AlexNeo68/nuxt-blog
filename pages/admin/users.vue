@@ -7,8 +7,8 @@
     :model="form"
   >
     <h2>Создать пользователя</h2>
-    <el-form-item label="Логин" prop="login">
-      <el-input v-model="form.login"></el-input>
+    <el-form-item label="Логин" prop="email">
+      <el-input v-model="form.email"></el-input>
     </el-form-item>
     <el-form-item label="Пароль" prop="password" class="mb2">
       <el-input type="password" v-model="form.password"></el-input>
@@ -27,11 +27,11 @@ export default {
     return {
       loading: false,
       form: {
-        login: "",
+        email: "",
         password: "",
       },
       rules: {
-        login: [
+        email: [
           { required: true, message: "Укажите логин", trigger: "blur" },
           {
             min: 3,
@@ -63,14 +63,15 @@ export default {
           this.loading = true;
 
           const formData = {
-            login: this.form.login,
+            email: this.form.email,
             password: this.form.password,
           };
           try {
             await this.$store.dispatch("auth/createUser", formData);
             this.$message.success("Пользователь успешно создан!");
+            this.form = { email: "", passwors: "" };
           } catch (e) {
-            console.log(e);
+            console.log(e.response);
           } finally {
             this.loading = false;
           }

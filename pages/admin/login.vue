@@ -6,8 +6,8 @@
     :model="form"
   >
     <h2>Войти в панель администрирования</h2>
-    <el-form-item label="Логин" prop="login">
-      <el-input v-model="form.login"></el-input>
+    <el-form-item label="Email" prop="email">
+      <el-input v-model="form.email"></el-input>
     </el-form-item>
     <el-form-item label="Пароль" prop="password" class="mb2">
       <el-input type="password" v-model="form.password"></el-input>
@@ -26,16 +26,16 @@ export default {
     return {
       loading: false,
       form: {
-        login: "",
+        email: "",
         password: "",
       },
       rules: {
-        login: [
-          { required: true, message: "Укажите ваш логин", trigger: "blur" },
+        email: [
+          { required: true, message: "Укажите ваш email", trigger: "blur" },
           {
             min: 3,
-            max: 15,
-            message: "Длина логина должна быть от 3 до 15 символов",
+            max: 64,
+            message: "Длина логина должна быть от 3 до 64 символов",
             trigger: "blur",
           },
         ],
@@ -66,6 +66,10 @@ export default {
         this.$message.success("Вы вышли из системы");
         break;
 
+      case "session":
+        this.$message.warning("Нет авторизации");
+        break;
+
       default:
         break;
     }
@@ -77,7 +81,7 @@ export default {
           this.loading = true;
 
           const formData = {
-            login: this.form.login,
+            email: this.form.email,
             password: this.form.password,
           };
           try {
