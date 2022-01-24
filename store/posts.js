@@ -1,53 +1,82 @@
-const posts = [
-  {
-    _id: "id1",
-    title: "Post 1",
-    views: 22,
-    comments: 30,
-    date: new Date(),
-  },
-  {
-    _id: "id2",
-    title: "Post 2",
-    views: 25,
-    comments: 10,
-    date: new Date(),
-  },
-  {
-    _id: "id3",
-    title: "Post 3",
-    views: 11,
-    comments: 2,
-    date: new Date(),
-  },
-];
-
 export const actions = {
-  fetchAdmin: async () => {
+  async getAnalytics({ commit }) {
     try {
-      return await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(posts);
-        }, 2000);
-      });
+      const res = await this.$axios.$get("/get-posts-analytics");
+      return res;
     } catch (e) {
       commit("SET_ERROR", e, { root: true });
       throw e;
     }
   },
-  fetchAdminById: async (post_id) => {
+  async fetch({ commit }) {
     try {
-      return await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(posts[0]);
-        }, 1000);
-      });
+      const res = await this.$axios.$get("/posts");
+      return res.data;
     } catch (e) {
       commit("SET_ERROR", e, { root: true });
       throw e;
     }
   },
-  remove({}, post_id) {},
-  create({}, formData) {},
-  update({}, { text, post_id }) {},
+  async fetchById({ commit }, post_id) {
+    try {
+      const res = await this.$axios.$get(`/posts/${post_id}`);
+      return res.data;
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+
+  async fetchAdmin({ commit }) {
+    try {
+      const res = await this.$axios.$get("/posts");
+      return res.data;
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+  async fetchAdminById({ commit }, post_id) {
+    try {
+      const res = await this.$axios.$get(`/posts/${post_id}`);
+      return res.data;
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+  async remove({ commit }, post_id) {
+    try {
+      await this.$axios.$delete(`/posts/${post_id}`);
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+  async create({ commit }, formData) {
+    try {
+      await this.$axios.post("/posts", formData);
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+  async update({ commit }, { text, post_id }) {
+    try {
+      await this.$axios.$patch(`/posts/${post_id}`, { body: text });
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
+  async addComment({ commit }, formData) {
+    try {
+      return (
+        await this.$axios.$post(`/posts/${formData.post_id}/comments`, formData)
+      ).data;
+    } catch (e) {
+      commit("SET_ERROR", e, { root: true });
+      throw e;
+    }
+  },
 };

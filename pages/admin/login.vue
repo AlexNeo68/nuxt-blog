@@ -74,6 +74,11 @@ export default {
         break;
     }
   },
+  head() {
+    return {
+      title: `Авторизоваться | ${process.env.appName}`,
+    };
+  },
   methods: {
     onSubmit() {
       this.$refs.form.validate(async (valid) => {

@@ -1,3 +1,6 @@
+import Cookies from "js-cookie";
+import Cookie from "cookie";
+
 export const state = () => ({
   token: null,
 });
@@ -15,6 +18,7 @@ export const actions = {
     try {
       const res = await this.$axios.$post("/login", formData);
       dispatch("setToken", res.token);
+      this.$axios.setToken(res.token, "Bearer");
     } catch (e) {
       commit("SET_ERROR", e, { root: true });
       throw e;
@@ -31,11 +35,25 @@ export const actions = {
   },
   logout: ({ commit }) => {
     commit("CLEAR_TOKEN");
+    Cookies.remove("nuxt-blog-token");
   },
   setToken: ({ commit }, token) => {
     commit("SET_TOKEN", token);
+    Cookies.set("nuxt-blog-token", token);
+  },
+
+  autoLogin({ dispatch }) {
+    const cookieStr = process.browser
+      ? document.cookie
+      : this.app.context.req.headers.cookie;
+    if (cookieStr) {
+      const cookies = Cookie.parse(cookieStr);
+      const token = cookies["nuxt-blog-token"];
+      dispatch("setToken", token);
+    }
   },
 };
 export const getters = {
   isAuth: (state) => Boolean(state.token),
+  token: (state) => state.token,
 };

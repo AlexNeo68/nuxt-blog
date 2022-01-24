@@ -37,6 +37,14 @@ export default {
     const post = await store.dispatch("posts/fetchAdminById", params.id);
     return { post };
   },
+  mounted() {
+    this.form.text = this.post.body;
+  },
+  head() {
+    return {
+      title: `Редактировать пост: ${this.post.title} | ${process.env.appName}`,
+    };
+  },
   data() {
     return {
       loading: false,
@@ -68,7 +76,7 @@ export default {
 
           const formData = {
             text: this.form.text,
-            post_id: 0,
+            post_id: this.post.id,
           };
           try {
             await this.$store.dispatch("posts/update", formData);

@@ -73,7 +73,7 @@ export default {
   layout: "admin",
   head() {
     return {
-      title: "Создать пост",
+      title: `Создать пост | ${process.env.appName}`,
     };
   },
   data() {
@@ -126,7 +126,7 @@ export default {
 
           const formData = new FormData();
           formData.append("title", this.form.title);
-          formData.append("text", this.form.text);
+          formData.append("body", this.form.text);
           formData.append("image", this.form.image);
 
           try {

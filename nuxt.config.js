@@ -18,13 +18,16 @@ export default {
 
   components: true,
 
-  buildModules: [],
+  buildModules: ["@nuxtjs/pwa"],
 
   modules: ["@nuxtjs/axios"],
 
   axios: {
     baseURL: "http://cms-web-studio.test/api/v1",
     withCredentials: true,
+  },
+  env: {
+    appName: "SSR Blog",
   },
 
   build: {

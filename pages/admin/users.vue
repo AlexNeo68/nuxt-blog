@@ -56,6 +56,11 @@ export default {
       },
     };
   },
+  head() {
+    return {
+      title: `Создать пользователя | ${process.env.appName}`,
+    };
+  },
   methods: {
     onSubmit() {
       this.$refs.form.validate(async (valid) => {

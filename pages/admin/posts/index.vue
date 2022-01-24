@@ -20,16 +20,14 @@
     <el-table-column label="Дата добавления">
       <template slot-scope="scope">
         <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{
-          scope.row.date.toLocaleString()
-        }}</span>
+        <span style="margin-left: 10px">{{ scope.row.date }}</span>
       </template>
     </el-table-column>
 
     <el-table-column label="Действия">
       <template slot-scope="scope">
         <el-tooltip content="Редактировать" placement="top">
-          <el-button round size="mini" @click="handleEdit(scope.row._id)">
+          <el-button round size="mini" @click="handleEdit(scope.row.id)">
             <i class="el-icon-edit"></i>
           </el-button>
         </el-tooltip>
@@ -38,7 +36,7 @@
             round
             size="mini"
             type="danger"
-            @click="handleDelete(scope.row._id)"
+            @click="handleDelete(scope.row.id)"
           >
             <i class="el-icon-delete"></i>
           </el-button>
@@ -53,6 +51,11 @@ export default {
   async asyncData({ store }) {
     const posts = await store.dispatch("posts/fetchAdmin");
     return { posts };
+  },
+  head() {
+    return {
+      title: `Посты | ${process.env.appName}`,
+    };
   },
   methods: {
     handleEdit(post_id) {
@@ -70,7 +73,7 @@ export default {
           }
         );
         await this.$store.dispatch("posts/remove", post_id);
-        this.posts = this.posts.filter((post) => post._id !== post_id);
+        this.posts = this.posts.filter((post) => post.id !== post_id);
         this.$message.success("Пост удалён");
       } catch (e) {}
     },
